@@ -3,6 +3,7 @@
 
 # define DIG case '0':case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9'
 # define ETOK "Unexpected token %c\n"
+# define EEND "Unexpected end of line\n"
 
 int	validate_str(char *str)
 {
@@ -39,21 +40,26 @@ int	validate_str(char *str)
 		case PARA:
 			if (!str[idx])
 			{
-				printf("Unexpected end of line.\n");
+				printf(EEND);
 				return (0);
 			}
-			if (!isdigit(str[idx]))
+			else if (str[idx] == '(')
+			{
+				pc++;
+				last_type = PARA;
+			}
+			else if (!isdigit(str[idx]))
 			{
 				printf(ETOK, str[idx]);
 				return (0);
 			}
-			if (isdigit(str[idx]))
+			else if (isdigit(str[idx]))
 				last_type = DIGIT;
 			break;
 		case SYM:
 			if (!str[idx])
 			{
-				printf("Unexpected end of line.\n");
+				printf(EEND);
 				return (0);
 			}
 			else if (str[idx] == '(')
@@ -93,7 +99,8 @@ int	validate_str(char *str)
 		}
 		idx++;
 	}
+	printf("pc = %d\n", pc);
 	if (pc != 0)
-		printf("Unexpected end of line");
+		return (printf(EEND), 0);
 	return (1);
 }

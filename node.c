@@ -6,7 +6,7 @@
 /*   By: hbreeze <hbreeze@student.42london.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 17:11:41 by hbreeze           #+#    #+#             */
-/*   Updated: 2025/09/18 17:45:57 by hbreeze          ###   ########.fr       */
+/*   Updated: 2025/09/19 15:12:29 by hbreeze          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,16 @@ t_node	*parse_para(char *str, size_t *idx)
 {
 	t_node	*node;
 
-	/*
-	do something here
-	*/
+	if (str[*idx] && str[*idx] == '(')
+	{
+		(*idx)++;
+		node = parse_add(str, idx);
+		if (str[*idx] && str[*idx] == ')')
+			(*idx)++;
+		else
+			return (0);
+		return (create_node('(', node, 0));
+	}
 }
 
 t_node	*parse_digit(char *str, size_t *idx)
@@ -58,7 +65,7 @@ t_node	*parse_add(char *str, size_t *idx)
 	t_node *node;
 
 	node = parse_mult(str, idx);
-	if (str[*idx] && str[*idx] == '+')
+	while (str[*idx] && str[*idx] == '+')
 	{
 		node = create_node(str[*idx], node, 0);
 		(*idx)++;
@@ -72,7 +79,7 @@ t_node	*parse_mult(char *str, size_t *idx)
 	t_node *node;
 
 	node = parse_digit(str, idx);
-	if (str[*idx] && str[*idx] == '*')
+	while (str[*idx] && str[*idx] == '*')
 	{
 		node = create_node(str[*idx], node, 0);
 		(*idx)++;
